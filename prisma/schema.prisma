@@ -1,0 +1,62 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  name      String
+  password  String
+  authId    Int
+  auth      Auth      @relation(fields: [authId], references: [id])
+  following Creator[]
+  Comment   Comment[]
+}
+
+model Auth {
+  id            Int    @id @default(autoincrement())
+  users         User[]
+  maxCreatorNum Int
+}
+
+model Creator {
+  id       Int    @id @default(autoincrement())
+  name     String
+  follower User[]
+  url      String
+  imgUrl   String
+
+  videos Video[]
+}
+
+model Video {
+  id        Int       @id @default(autoincrement())
+  title     String
+  url       String
+  imgUrl    String
+  creatorId Int
+  creator   Creator   @relation(fields: [creatorId], references: [id])
+  comments  Comment[]
+}
+
+model Comment {
+  id       Int       @id @default(autoincrement())
+  content  String
+  senderId Int
+  sender   User      @relation(fields: [senderId], references: [id])
+  videoId  Int
+  video    Video     @relation(fields: [videoId], references: [id])
+  parentId Int?
+  parent   Comment?  @relation("ParentComment", fields: [parentId], references: [id])
+  children Comment[] @relation("ParentComment")
+}
