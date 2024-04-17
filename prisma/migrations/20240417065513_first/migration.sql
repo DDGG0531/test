@@ -1,4 +1,22 @@
 -- CreateTable
+CREATE TABLE "User" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
+    "authId" INTEGER NOT NULL,
+
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Auth" (
+    "id" SERIAL NOT NULL,
+    "maxCreatorNum" INTEGER NOT NULL,
+
+    CONSTRAINT "Auth_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "Creator" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
@@ -41,6 +59,9 @@ CREATE UNIQUE INDEX "_CreatorToUser_AB_unique" ON "_CreatorToUser"("A", "B");
 
 -- CreateIndex
 CREATE INDEX "_CreatorToUser_B_index" ON "_CreatorToUser"("B");
+
+-- AddForeignKey
+ALTER TABLE "User" ADD CONSTRAINT "User_authId_fkey" FOREIGN KEY ("authId") REFERENCES "Auth"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Video" ADD CONSTRAINT "Video_creatorId_fkey" FOREIGN KEY ("creatorId") REFERENCES "Creator"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

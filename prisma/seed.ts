@@ -5,15 +5,9 @@ import { PrismaClient, Prisma } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
-  const authInput: Prisma.AuthCreateInput = {
-    maxCreatorNum: 5,
-  };
-
   const auth1 = await prisma.auth.upsert({
     where: { id: 1 },
-    update: {
-      maxCreatorNum: 100,
-    },
+    update: {},
     create: {
       id: 1,
       maxCreatorNum: 5,
